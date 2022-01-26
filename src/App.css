@@ -1,38 +1,65 @@
-.App {
-  text-align: center;
-}
-
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+/*
+ * @NOTE: Prepend a `~` to css file paths that are in your node_modules
+ *        See https://github.com/webpack-contrib/sass-loader#imports
+ */
+body {
+  position: relative;
+  background: rgb(239, 242, 247);
+  font-family: sans-serif;
+  overflow-y: hidden;
+  overflow-x: hidden;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
+  align-items: center;
 }
 
-.App-link {
-  color: #61dafb;
+#root {
+  /* height: 100vh; */
+  width: 100vw;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+#layout {
+  position: relative;
+  flex: 1;
+  overflow: hidden;
+  height: 100vh;
 }
+
+#rete {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: column;
+  height: 80%;
+}
+ 
+.dock {
+  display: flex;
+  position: absolute;
+  top: 92%;
+  /* left: 10px; */
+  width: 100%;
+  transform: scale(.6);
+  transform-origin: 0 0;
+  transition: top ease .5s;
+  opacity: .7;
+  /* background: linear-gradient(0deg, rgb(239, 242, 247) 90%,transparent); */
+}
+
+.dock:hover {
+  top: 88%;
+  /* transform: translate(0, -10%) scale(.6); */
+  /* top: -1%; */
+  opacity: 1;
+}
+ 
+.dock .item {
+  display: inline-block;
+  transform: scale(0.9);
+  transform-origin: 50% 0;
+  transition: top ease .5s;
+}
+
+.dock:hover .item {
+  top: 80%;
+}
+
+ 
