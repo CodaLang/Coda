@@ -9,6 +9,7 @@ import AddComponent from "./Components/AddComponent";
 import IntervalSignal from "./Components/Signals/IntervalSignalComponent";
 import WaveSignal from "./Components/Signals/WaveSignalComponent";
 import { streams } from "../App";
+import PlayNoteComponent from "./Components/PlayNoteComponent";
 
 const options = () => ({
 	container: document.querySelector('.dock'),
@@ -34,6 +35,7 @@ const Editor = async () => {
 		new AddComponent(),
 		new IntervalSignal(),
 		new WaveSignal(),
+		new PlayNoteComponent(),
 	];
 
 	components.forEach((c) => {
