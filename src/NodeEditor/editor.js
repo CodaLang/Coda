@@ -6,6 +6,7 @@ import NumComponent from "./Components/NumComponent";
 import MouseClickSignal from "./Components/Signals/MouseClickSignalComponent";
 import TapComponent from "./Components/TapComponent";
 import AddComponent from "./Components/AddComponent";
+import PlayNoteComponent from "./Components/PlayNoteComponent";
 
 const options = () => ({
 	container: document.querySelector('.dock'),
@@ -29,6 +30,7 @@ const Editor = async () => {
 		new MouseClickSignal(),
 		new TapComponent(),
 		new AddComponent(),
+		new PlayNoteComponent(),
 	];
 
 	components.forEach((c) => {
