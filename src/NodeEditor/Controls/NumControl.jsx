@@ -1,27 +1,66 @@
 import React from "react";
 import Rete from "rete";
+// import InputForm from "../../Components/InputForm";
 
-class NumReactControl extends React.Component {
+// class NumReaVctControl extends React.Component {
+// 	constructor(){
+// 		super();
+// 		this.state = {
+// 			value: 0
+// 		}
+// 	}
 
-	componentDidMount(){
+// 	handleChange = (num) => {
+// 		this.setState({value: num});
+// 	}
 
-	}
+// 	render(){
+// 		return(
+// 			<div>
+// 				<InputForm onChange={this.handleChange} value={this.state.value} className="rounded bg-white">
+// 					{this.state.value}
+// 				</InputForm>
+// 			</div>
+// 		)
+// 	}
 
-	render(){
-		return(
-			<div>
-				<input type="number" className="rounded bg-white"></input>
-			</div>
-		)
-	}
-
-}
+// }
 
 export default class NumControl extends Rete.Control {
-	constructor(emitter, key, name){
+	static component = ({value, onChange}) => (
+		<input
+			type="number"
+			value={value}
+			ref={(ref) => {
+				ref && ref.addEventListener("pointerdown", (e) => e.stopPropagation());
+			}}
+			onChange={(e) => onChange(+e.target.value)}
+		/>
+	)
+
+	constructor(emitter, key, node, readonly=false){
 		super(key);
+		this.emitter = emitter;
+		this.key = key;
+		this.component = NumControl.component;
 		this.render = "react";
-		this.component = NumReactControl;
-		this.props = {emitter, name}
+
+		const initial = node.data[key] || 0;
+
+		node.data[key] = initial;
+		this.props = {
+			readonly,
+			value: initial,
+			onChange: (v) => {
+				this.setValue(v);
+				this.emitter.trigger("process");
+			}
+		};
+	}
+
+	setValue(val){
+		this.props.value = val;
+		this.putData(this.key, val)
+		this.update()
 	}
 }

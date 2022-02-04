@@ -15,7 +15,7 @@ export default class NumComponent extends Rete.Component {
 		const input = new Rete.Input("data", "Event", Sockets.AnyValue);
 		const out = new Rete.Output("data", "Num", Sockets.NumValue);
 
-		node.addControl(new NumControl(this.editor, "num")).addInput(input).addOutput(out);
+		node.addControl(new NumControl(this.editor, "num", node)).addInput(input).addOutput(out);
 	}
 
 	worker(node, inputs, outputs){
@@ -29,9 +29,10 @@ export default class NumComponent extends Rete.Component {
 
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
 			data: () => {
-				current = 2;
-				this.observable.next(2);
-			}
+				current = node.data.num;
+				console.log(node.data.num)
+				this.observable.next(node.data.num);
+			},
 		})
 	}
 }

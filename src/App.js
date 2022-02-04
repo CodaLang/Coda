@@ -1,5 +1,13 @@
 import './App.css';
 import ProjectBar from './Components/ProjectBar';
+import EditorConsole from  "./Components/EditorConsole";
+import { BehaviorSubject } from 'rxjs';
+import { TimelineStream } from './NodeEditor/timeline';
+
+export const streams = {
+	ConsoleStream : new BehaviorSubject(""),
+	TimelineStream : TimelineStream,
+}
 
 function App() {
   return (
@@ -7,6 +15,7 @@ function App() {
       <div id="layout">
         <ProjectBar/>
         <div id="rete" className="h-screen"/>
+        <EditorConsole ConsoleStream={streams.ConsoleStream}/>
         <div className="dock"/>
       </div>
     </div>

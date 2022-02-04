@@ -7,6 +7,9 @@ import MouseClickSignal from "./Components/Signals/MouseClickSignalComponent";
 import TapComponent from "./Components/TapComponent";
 import AddComponent from "./Components/AddComponent";
 import PlayNoteComponent from "./Components/PlayNoteComponent";
+import IntervalSignal from "./Components/Signals/IntervalSignalComponent";
+import WaveSignal from "./Components/Signals/WaveSignalComponent";
+import { streams } from "../App";
 
 const options = () => ({
 	container: document.querySelector('.dock'),
@@ -28,9 +31,11 @@ const Editor = async () => {
 	const components = [
 		new NumComponent(),
 		new MouseClickSignal(),
-		new TapComponent(),
+		new TapComponent(streams.ConsoleStream),
 		new AddComponent(),
 		new PlayNoteComponent(),
+		new IntervalSignal(),
+		new WaveSignal(),
 	];
 
 	components.forEach((c) => {
