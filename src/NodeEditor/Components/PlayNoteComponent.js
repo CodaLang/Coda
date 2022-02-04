@@ -1,5 +1,5 @@
 import Rete from "rete";
-import { Subject } from "rxjs";
+import { fromEvent, map, Subject } from "rxjs";
 import { handleSubscription } from "../../utils";
 import * as Tone from "tone";
 import Sockets from "../sockets";
