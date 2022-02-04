@@ -5,6 +5,7 @@ import DockPlugin from "rete-dock-plugin";
 import NumComponent from "./Components/NumComponent";
 import MouseClickSignal from "./Components/Signals/MouseClickSignalComponent";
 import TapComponent from "./Components/TapComponent";
+import AddComponent from "./Components/AddComponent";
 
 const options = () => ({
 	container: document.querySelector('.dock'),
@@ -27,6 +28,7 @@ const Editor = async () => {
 		new NumComponent(),
 		new MouseClickSignal(),
 		new TapComponent(),
+		new AddComponent(),
 	];
 
 	components.forEach((c) => {

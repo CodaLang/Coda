@@ -18,15 +18,16 @@ export default class TapComponent extends Rete.Component {
 	}
 
 	worker(node, inputs, outputs){
-		outputs.num = {
+		outputs.data = {
 			name: node.id,
 			observable: this.observable
 		};
 
-		handleSubscription(inputs, "data", this.subscriptions, (value) => {
-			console.log(value);
-			return value;
-		})
-
+		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
+			data: (value) => {
+				console.log(value);
+				return value;
+			}
+		});
 	}
 }

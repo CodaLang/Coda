@@ -9,7 +9,9 @@ class NumReactControl extends React.Component {
 
 	render(){
 		return(
-			<div>Yoo</div>
+			<div>
+				<input type="number" className="rounded bg-white"></input>
+			</div>
 		)
 	}
 
