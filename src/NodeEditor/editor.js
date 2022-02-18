@@ -2,6 +2,7 @@ import Rete from "rete";
 import ConnectionPlugin from "rete-connection-plugin"
 import ReactRenderPlugin from "rete-react-render-plugin";
 import DockPlugin from "rete-dock-plugin";
+import ContextMenuPlugin, {Menu, Item, Search} from "rete-context-menu-plugin";
 import NumComponent from "./Components/NumComponent";
 import MouseClickSignal from "./Components/Signals/MouseClickSignalComponent";
 import TapComponent from "./Components/TapComponent";
@@ -25,6 +26,12 @@ const Editor = async () => {
 	editor.use(ConnectionPlugin);
 	editor.use(ReactRenderPlugin);
 	editor.use(DockPlugin, options());
+	editor.use(ContextMenuPlugin, {
+		searchBar: false,
+		nodeItems: {
+			'Delete': true
+		}
+	})
 
 	const engine = new Rete.Engine("coda@0.1.0");
 
@@ -36,7 +43,6 @@ const Editor = async () => {
 		new PlayNoteComponent(),
 		new IntervalSignal(),
 		new WaveSignal(),
-		new PlayNoteComponent(),
 	];
 
 	components.forEach((c) => {

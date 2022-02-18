@@ -1,6 +1,6 @@
 import Rete from "rete";
 import Sockets from "../sockets";
-import { Subject, combineLatestWith, map, tap } from "rxjs";
+import { Subject, combineLatestWith, map, tap, combineLatest } from "rxjs";
 
 export default class AddComponent extends Rete.Component {
 	constructor(){
@@ -43,18 +43,19 @@ export default class AddComponent extends Rete.Component {
 				observablesToSub.push(input.observable);
 			})
 
-			const sub = observablesToSub[0].pipe(
-				combineLatestWith(observablesToSub.slice(1)),
+			const sub = combineLatest(
+				inputs.num.map(input => input.observable)
+			).pipe(
 				tap((...vals) => {
-					console.log(vals)
-					return vals
+					console.log(vals);
+					return vals;
 				}),
 				map((...vals) => {
 					return vals.reduce((acc, val) => Number(acc) + Number(val), 0);
 				})
 			).subscribe(x => {
 				this.observable.next(x);
-			});
+			})
 
 			for (let i = 0; i < inputs.num.length; i++){
 				this.subscriptions[inputs.num[i].name] = sub;
