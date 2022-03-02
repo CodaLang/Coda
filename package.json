@@ -7,8 +7,6 @@
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "nth-check": "^2.0.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
     "rete": "^1.4.6-rc.1",
     "rete-connection-plugin": "^0.9.0",
     "rete-context-menu-plugin": "^0.6.0",
@@ -17,6 +15,10 @@
     "rxjs": "^7.5.2",
     "tone": "^14.7.77",
     "web-vitals": "^2.1.4"
+  },
+  "peerDependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2"
   },
   "scripts": {
     "start": "react-scripts start",

@@ -3,6 +3,7 @@ import ProjectBar from './Components/ProjectBar';
 import EditorConsole from  "./Components/EditorConsole";
 import { BehaviorSubject } from 'rxjs';
 import { TimelineStream } from './NodeEditor/timeline';
+import TimelineBar from './Components/TimelineBar';
 
 export const streams = {
 	ConsoleStream : new BehaviorSubject(""),
