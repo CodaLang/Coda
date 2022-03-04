@@ -13,10 +13,11 @@ export default class PlayNoteComponent extends Rete.Component {
 	}
 
 	async builder(node){
-		const input1 = new Rete.Input("data", "Data", Sockets.AnyValue);
-		const output1 = new Rete.Input("data", "Output", Sockets.AnyValue);
+		const input1 = new Rete.Input("noteData", "String", Sockets.AnyValue);
+		const input2 = new Rete.Input("data", "Data", Sockets.AnyValue);
+		const output1 = new Rete.Output("data", "Output", Sockets.AnyValue);
 
-		node.addInput(input1).addOutput(output1);
+		node.addInput(input1).addInput(input2).addOutput(output1);
 	}
 
 	worker(node, inputs, outputs){
@@ -26,9 +27,13 @@ export default class PlayNoteComponent extends Rete.Component {
 		};
 
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
+			noteData: () => {
+				console.log("run")
+			},
+
 			data: (value) => {
 				this.synth.triggerAttackRelease("C4", "8n");
-                this.subject.next("C4");
+                this.observable.next("C4");
 			}
 		});
 	}
