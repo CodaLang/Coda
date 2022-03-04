@@ -17,9 +17,9 @@ const TimelineBar = (props) => {
 
 	return (
 		<div className="flex flex-row min-h-[10%] bg-slate-600">
-			{timelineState.events.map(event => (
+			{/* {timelineState.events.map(event => (
 				<div>event.name</div>
-			))}
+			))} */}
 		</div>
 	)
 }
