@@ -12,6 +12,7 @@ import IntervalSignal from "./Components/Signals/IntervalSignalComponent";
 import WaveSignal from "./Components/Signals/WaveSignalComponent";
 import { streams } from "../App";
 import StringComponent from "./Components/StringComponent";
+import OscillateNoteComponent from "./Components/OscillateNoteComponent";
 
 const options = () => ({
 	container: document.querySelector('.dock'),
@@ -38,13 +39,14 @@ const Editor = async () => {
 
 	const components = [
 		new NumComponent(),
+		new StringComponent(),
 		new MouseClickSignal(),
-		new TapComponent(streams.ConsoleStream),
-		new AddComponent(),
-		new PlayNoteComponent(),
 		new IntervalSignal(),
 		new WaveSignal(),
-		new StringComponent(),
+		new PlayNoteComponent(),
+		new OscillateNoteComponent(),
+		new TapComponent(streams.ConsoleStream),
+		new AddComponent(),
 	];
 
 	components.forEach((c) => {
