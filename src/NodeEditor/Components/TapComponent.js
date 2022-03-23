@@ -29,9 +29,6 @@ export default class TapComponent extends Rete.Component {
 				console.log(value);
 				this.consoleStream.next(value + "");
 				return value;
-			},
-			test: () => {
-				console.log("test");
 			}
 		});
 	}

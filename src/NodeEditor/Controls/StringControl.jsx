@@ -36,7 +36,7 @@ export default class StringControl extends Rete.Control {
 
 	setValue(val){
 		this.props.value = val;
-		this.putData(this.key, val)
-		this.update()
+		this.putData(this.key, val);
+		this.update();
 	}
 }

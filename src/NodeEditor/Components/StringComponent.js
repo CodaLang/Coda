@@ -19,18 +19,20 @@ export default class StringComponent extends Rete.Component {
 	}
 
 	worker(node, inputs, outputs){
-		let current = 0;
+		let current = "";
 
 		outputs.data = {
 			name: node.id,
 			observable: this.observable,
-			string: current,
+			string: node.data.string,
 		}
 
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
 			data: () => {
+				console.log("Ran");
 				current = node.data.string;
 				console.log(node.data.string)
+
 				this.observable.next(node.data.string);
 			},
 		})
