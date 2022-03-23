@@ -1,40 +1,18 @@
 import Rete from "rete";
-import { fromEvent, map, Subject, tap } from "rxjs";
+import { fromEvent, map } from "rxjs";
 import Sockets from "../../sockets";
-import { TimelineInputStream, TimelineOutputStream } from "../../timelineAPI";
 
 export default class MouseClickSignal extends Rete.Component {
 	constructor(){
 		super("MouseClickSignal");
-
-		this.mouseClickStream = new Subject();
-
-		//For normal mousedown events
-		fromEvent(document, "mousedown").pipe(
+		this.mouseClickStream = fromEvent(document, "mousedown").pipe(
 			map((event) => {
 				return {
 					x: event.clientX,
-					y: event.clientY,
+					y: event.clientY
 				}
-			}),
-			tap((coordinates) => {
-				//Add to timeline history
-				TimelineInputStream.next({
-					action: "MouseClick",
-					data: coordinates
-				})
-				return coordinates;
 			})
-		).subscribe((coordinates) => {
-			this.mouseClickStream.next(coordinates);
-		})
-
-		//For rewinding
-		this.timelineSubscription = TimelineOutputStream.subscribe((event) => {
-			if(event.action === "MouseClick"){
-				this.mouseClickStream.next(event.data);
-			}
-		})
+		)
 	}
 
 	async builder(node){

@@ -36,12 +36,10 @@ export default class OscillateNoteComponent extends Rete.Component {
 
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
 			data: (value) => {
-				// console.log(value);
 				this.startNote = value;
 			},
 
 			data2: (value) => {
-				// console.log(value);
 				this.rampTo = value;
 			},
 

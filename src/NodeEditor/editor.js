@@ -10,9 +10,10 @@ import AddComponent from "./Components/AddComponent";
 import PlayNoteComponent from "./Components/PlayNoteComponent";
 import IntervalSignal from "./Components/Signals/IntervalSignalComponent";
 import WaveSignal from "./Components/Signals/WaveSignalComponent";
+import OscillateNoteComponent from "./Components/OscillateNoteComponent";
 import { streams } from "../App";
 import StringComponent from "./Components/StringComponent";
-import OscillateNoteComponent from "./Components/OscillateNoteComponent";
+import { PulseOscillator } from "tone";
 
 const options = () => ({
 	container: document.querySelector('.dock'),
@@ -47,6 +48,7 @@ const Editor = async () => {
 		new OscillateNoteComponent(),
 		new TapComponent(streams.ConsoleStream),
 		new AddComponent(),
+		new OscillateNoteComponent(),
 	];
 
 	components.forEach((c) => {
