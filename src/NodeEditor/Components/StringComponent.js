@@ -4,6 +4,7 @@ import { Subject } from "rxjs";
 import { handleSubscription } from "../../utils";
 import StringControl from "../Controls/StringControl";
 
+//main
 export default class StringComponent extends Rete.Component {
 	constructor(){
 		super("String");
