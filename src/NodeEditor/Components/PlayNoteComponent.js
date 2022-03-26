@@ -32,7 +32,9 @@ export default class PlayNoteComponent extends Rete.Component {
 			},
 
 			data: (value) => {
-				this.synth.triggerAttackRelease("C4", "8n");
+				console.log(inputs);
+				const startNote = inputs.noteData[0].string || "C4";
+				this.synth.triggerAttackRelease(startNote, "8n");
                 this.observable.next("C4");
 			}
 		});
