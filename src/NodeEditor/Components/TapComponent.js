@@ -26,6 +26,7 @@ export default class TapComponent extends Rete.Component {
 
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
 			data: (value) => {
+				console.log(inputs);
 				console.log(value);
 				this.consoleStream.next(value + "");
 				return value;

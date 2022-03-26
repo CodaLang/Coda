@@ -24,7 +24,7 @@ export default class NumComponent extends Rete.Component {
 		outputs.data = {
 			name: node.id,
 			observable: this.observable,
-			num: current,
+			num: node.data.num || 0,
 		}
 
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {

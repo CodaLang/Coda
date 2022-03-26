@@ -28,7 +28,10 @@ export default class StringControl extends Rete.Control {
 			readonly,
 			value: initial,
 			onChange: (v) => {
-				console.log(v);
+				// console.log(v);
+				if (node.controlStream){
+					node.controlStream.next(v);
+				}
 				this.setValue(v);
 				this.emitter.trigger("process");
 			}
