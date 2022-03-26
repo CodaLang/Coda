@@ -4,6 +4,7 @@ import { Subject } from "rxjs";
 import { handleSubscription } from "../../utils";
 import StringControl from "../Controls/StringControl";
 
+//main
 export default class StringComponent extends Rete.Component {
 	constructor(){
 		super("String");
@@ -29,6 +30,7 @@ export default class StringComponent extends Rete.Component {
 
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
 			data: () => {
+				console.log("Ran");
 				current = node.data.string;
 				this.observable.next(node.data.string);
 			},

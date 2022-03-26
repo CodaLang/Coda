@@ -1,4 +1,3 @@
-
 import Rete from "rete";
 import { fromEvent, map, Subject } from "rxjs";
 import { handleSubscription } from "../../utils";
@@ -56,14 +55,9 @@ export default class OscillateNoteComponent extends Rete.Component {
 						value: startNote,
 						units: "frequency",
 					});
-
-					// console.log("Ran");
-
-					this.osc.start();
 					this.signal.connect(this.osc.frequency);
-
+					this.osc.start();
 					this.signal.rampTo(endNote, 2, "+1");
-
 					this.observable.next(endNote);
 				}
 				else{
