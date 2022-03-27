@@ -47,7 +47,7 @@ export default class OscillateNoteComponent extends Rete.Component {
 
 			event: () => {
 				this.toggle = !this.toggle;
-				console.log(inputs);
+				// console.log(inputs);
 
 				const startNote = inputs.data[0].string;
 				const endNote = inputs.data2[0].string;

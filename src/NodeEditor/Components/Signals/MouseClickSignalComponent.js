@@ -7,6 +7,7 @@ export default class MouseClickSignal extends Rete.Component {
 		super("MouseClickSignal");
 		this.mouseClickStream = fromEvent(document, "mousedown").pipe(
 			map((event) => {
+				event.stopPropagation();
 				return {
 					x: event.clientX,
 					y: event.clientY
