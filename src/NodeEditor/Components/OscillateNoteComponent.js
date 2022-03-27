@@ -34,6 +34,8 @@ export default class OscillateNoteComponent extends Rete.Component {
 			observable: this.observable
 		};
 
+		console.log(inputs);
+
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
 			data: (value) => {
 				this.startNote = value;

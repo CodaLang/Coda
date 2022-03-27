@@ -15,6 +15,7 @@ import { streams } from "../App";
 import StringComponent from "./Components/StringComponent";
 import { PulseOscillator } from "tone";
 import GreaterThan from "./Components/Operators/GreaterThan";
+import { filter, fromEvent } from "rxjs";
 
 const options = () => ({
 	container: document.querySelector('.dock'),
@@ -57,10 +58,26 @@ const Editor = async () => {
 		engine.register(c);
 	});
 
-	const node1 = await components[0].createNode({num: 1});
-	node1.position = [80, 200];
+	// const node1 = await components[0].createNode({num: 1});
+	// node1.position = [80, 200];
 
-	editor.addNode(node1);
+	// editor.addNode(node1);
+
+	fromEvent(document, "keydown").subscribe(e => {
+		if (e.ctrlKey && e.key === "s" && e.altKey){
+			console.log("Loading quicksave");
+			const editorJSON = JSON.parse(localStorage.getItem("quickSave"));
+			editor.clear();
+			editor.fromJSON(editorJSON);
+			console.log(editorJSON);
+		}
+		else if (e.ctrlKey && e.key === "s"){
+			e.preventDefault();
+			console.log("Quick saving program");
+			localStorage.setItem("quickSave", JSON.stringify(editor.toJSON()));
+		}
+	})
+
 
 	editor.on('process nodecreated noderemoved connectioncreated connectionremoved', async () => {
 		await engine.abort();
