@@ -42,7 +42,9 @@ export default class OscillateNoteComponent extends Rete.Component {
 			},
 
 			data2: (value) => {
+				// console.log(value);
 				this.rampTo = value;
+				// this.signal.rampTo(this.rampTo, 2, "+1");
 			},
 
 			event: () => {
