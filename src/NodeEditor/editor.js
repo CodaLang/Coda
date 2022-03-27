@@ -13,9 +13,11 @@ import WaveSignal from "./Components/Signals/WaveSignalComponent";
 import OscillateNoteComponent from "./Components/OscillateNoteComponent";
 import { streams } from "../App";
 import StringComponent from "./Components/StringComponent";
-import { PulseOscillator } from "tone";
 import GreaterThan from "./Components/Operators/GreaterThan";
 import { filter, fromEvent } from "rxjs";
+import SynthesizerComponent from "./Components/SynthesizerComponent";
+import AudioDestinationComponent from "./Components/AudioDestinationComponent";
+import AudioFilterComponent from "./Components/AudioFilterComponent";
 
 const options = () => ({
 	container: document.querySelector('.dock'),
@@ -51,6 +53,9 @@ const Editor = async () => {
 		new TapComponent(streams.ConsoleStream),
 		new AddComponent(),
 		new GreaterThan(),
+		new AudioFilterComponent(),
+		new SynthesizerComponent(),
+		new AudioDestinationComponent(),
 	];
 
 	components.forEach((c) => {
