@@ -10,19 +10,12 @@ export default class StringComponent extends Rete.Component {
 		super("String");
 		this.subscriptions = {};
 		this.observable = new Subject();
-		this.controlStream = new Subject();
+		// this.controlStream = new Subject();
 	}
 
 	async builder(node){
 		const input = new Rete.Input("data", "Event", Sockets.AnyValue);
 		const out = new Rete.Output("data", "String", Sockets.StringValue);
-
-		node.controlStream = this.controlStream;
-
-
-		this.controlStream.subscribe((string) => {
-			this.observable.next(node.data.string)
-		});
 
 		node.addControl(new StringControl(this.editor, "string", node)).addInput(input).addOutput(out);
 	}
@@ -36,13 +29,15 @@ export default class StringComponent extends Rete.Component {
 			string: node.data.string,
 		}
 
+		// this.subscriptions.nodeName = node.id;
 
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
 			data: () => {
-				console.log("Ran");
+				// console.log(node.id);
 				current = node.data.string;
 				this.observable.next(node.data.string);
 			},
 		})
+		console.log(node.id, inputs, this.subscriptions);
 	}
 }

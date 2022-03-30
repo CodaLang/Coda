@@ -16,7 +16,7 @@ function App() {
       <div id="layout">
         <ProjectBar/>
         <div id="rete" className="h-screen"/>
-        <EditorConsole ConsoleStream={streams.ConsoleStream}/>
+        {/* <EditorConsole ConsoleStream={streams.ConsoleStream}/> */}
         <div className="dock"/>
       </div>
     </div>

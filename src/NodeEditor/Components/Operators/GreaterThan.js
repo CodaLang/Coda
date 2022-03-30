@@ -15,7 +15,7 @@ export default class GreaterThan extends Rete.Component {
 	async builder(node){
 		node
 		.addInput(
-			new Rete.Input("num", "Num", Sockets.NumValue, true),
+			new Rete.Input("num1", "Num", Sockets.NumValue, true),
 		)
 		.addInput(
 			new Rete.Input("num2", "Num", Sockets.NumValue, true)
@@ -30,10 +30,17 @@ export default class GreaterThan extends Rete.Component {
 			name: node.id,
 			observable: this.observable
 		}
-		console.log(inputs);
 
 		const evaluate = () => {
-			console.log(this.num1, this.num2)
+			if (inputs.num1 && inputs.num1[0]){
+				this.num1 = inputs.num1[0].num;
+			}
+
+			if (inputs.num2 && inputs.num2[0]){
+				this.num2 = inputs.num2[0].num;
+			}
+
+			// console.log(this.num1, this.num2);
 			if (this.num1 > this.num2){
 				this.observable.next(true);
 			}
@@ -42,17 +49,15 @@ export default class GreaterThan extends Rete.Component {
 			}
 		}
 
-		this.num1 = inputs.num[0].num;
-		this.num2 = inputs.num2[0].num;
+		console.log(inputs);
 
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
-			num: (val) => {
-				this.num1 = val;
+			num1: (val) => {
+				console.log("ran");
 				evaluate();
 			},
 
 			num2: (val) => {
-				this.num2 = val;
 				evaluate();
 			}
 		});

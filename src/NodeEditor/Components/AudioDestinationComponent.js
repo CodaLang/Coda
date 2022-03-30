@@ -10,6 +10,7 @@ export default class AudioDestinationComponent extends Rete.Component {
 		super("AudioDestination");
 		this.subscriptions = {};
 		this.observable = new Subject();
+		this.destinationSynth = new Tone.Synth();
 	}
 
 	async builder(node){
@@ -25,17 +26,35 @@ export default class AudioDestinationComponent extends Rete.Component {
 			observable: this.observable
 		};
 
+		console.log(inputs);
+		// if (inputs.synth && inputs.synth[0]){
+		// 	const inputSynth = inputs.synth[0].synth;
+		// 	this.destinationSynth = new Tone.Synth();
+		// 	this.destinationSynth.set(inputSynth.get());
+		// }
+
+
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
 			synth: (synthObject) => {
 				const fx = [];
+				// console.log(synthObject);
+				console.log(synthObject);
 
-				synthObject.triggerAttack(synthObject.noteName);
+				// this.destinationSynth.triggerRelease();
+				this.destinationSynth.dispose();
+				// synthObject.triggerAttack("C4");
+				// synthObject.toDestination();
+
+				this.destinationSynth = new Tone.Synth();
+				this.destinationSynth.set(synthObject.get());
+
+				console.log(synthObject.noteToPlay);
+				this.destinationSynth.triggerAttack(synthObject.noteToPlay)
 
 				if (synthObject.filterObject){
 					fx.push(synthObject.filterObject);
 				}
-
-				synthObject.chain(...fx, Tone.Destination);
+				this.destinationSynth.chain(...fx, Tone.Destination);
 			},
 		});
 	}

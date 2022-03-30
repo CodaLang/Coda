@@ -18,6 +18,7 @@ import { filter, fromEvent } from "rxjs";
 import SynthesizerComponent from "./Components/SynthesizerComponent";
 import AudioDestinationComponent from "./Components/AudioDestinationComponent";
 import AudioFilterComponent from "./Components/AudioFilterComponent";
+import * as Tone from "tone";
 
 const options = () => ({
 	container: document.querySelector('.dock'),
@@ -27,7 +28,7 @@ const options = () => ({
 
 const Editor = async () => {
 	const container = document.querySelector("#rete");
-	console.log(container);
+	// console.log(container);
 	const editor = new Rete.NodeEditor("coda@0.1.0", container);
 
 	editor.use(ConnectionPlugin);
@@ -82,6 +83,15 @@ const Editor = async () => {
 			localStorage.setItem("quickSave", JSON.stringify(editor.toJSON()));
 		}
 	})
+
+	let started = false;
+	document.querySelector("button").addEventListener("click", async () => {
+		if (!started){
+			started = true
+			await Tone.start();
+			console.log("context started");
+		}
+	});
 
 
 	editor.on('process nodecreated noderemoved connectioncreated connectionremoved', async () => {

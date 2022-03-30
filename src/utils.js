@@ -99,31 +99,53 @@
 export const handleSubscription = (inputs, subscriptions, callbacks) => {
 	//If there are inputs to the node, add the subscription if it does not exist, otherwise unsubscribe
 	const unsubscribeAll = () => {
-			Object.values(subscriptions).forEach(socket => {
-				socket.forEach(sub => {
+		Object.values(subscriptions).forEach(socket => {
+			Object.values(socket).forEach(sub => {
+				sub.unsubscribe();
+			})
+		});
+		subscriptions = {};
+	};
+
+	const checkInputsForUnsubscribe = () => {
+		Object.values(subscriptions).forEach(socket => {
+			Object.entries(socket).forEach( ([key, sub]) => {
+				if (!inputs[key]){
+					console.log("Hanging subscription");
 					sub.unsubscribe();
-				})
-			});
-			subscriptions = {};
-		};
+					console.log(socket, key, subscriptions)	;
+				}
+				else if (inputs[key].filter(node => node.name === key).length !== 0){
+					console.log("Hanging subscription");
+				}
+			})
+		})
+	}
 
-	unsubscribeAll();
-
+	checkInputsForUnsubscribe();
+	// console.log(inputs);
+	// unsubscribeAll();
 
 	if (Object.keys(inputs).length > 0){
 		Object.entries(inputs).forEach( ([key, inputSocket]) => {
 
-			if(!subscriptions[inputSocket]){
-				subscriptions[inputSocket] = [];
+			// console.log(inputSocket);
+
+			if(!subscriptions[key]){
+				subscriptions[key] = {};
 			}
+
+			callbacks[key]();
+
 			inputSocket.forEach(input => {
 				//If the list of subscriptions does not have a subscription for the input at the specific inputSocket, subscribe
-				if (!subscriptions[inputSocket][input.name]){
-					subscriptions[inputSocket][input.name] = input.observable.subscribe(callbacks[key]);
-					// subscriptions.totalSize += 1;
+				if (!subscriptions[key][input.name]){
+					subscriptions[key][input.name] = input.observable.subscribe(callbacks[key]);
 				}
 			});
 		});
 	}
+	// console.log(subscriptions);
+
 	return subscriptions;
 }

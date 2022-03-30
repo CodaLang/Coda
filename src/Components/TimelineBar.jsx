@@ -5,7 +5,7 @@ import { Timeline } from "../NodeEditor/timeline";
 
 require('react-dom');
 window.React2 = require('react');
-console.log(window.React1 === window.React2);
+// console.log(window.React1 === window.React2);
 
 const TimelineBar = (props) => {
 	const [timelineState, setTimelineState] = useState(Timeline.initialState);

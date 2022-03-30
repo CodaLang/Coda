@@ -19,18 +19,16 @@ export default class NumComponent extends Rete.Component {
 	}
 
 	worker(node, inputs, outputs){
-		let current = 0;
-
 		outputs.data = {
 			name: node.id,
 			observable: this.observable,
 			num: node.data.num || 0,
 		}
 
+		console.log(inputs);
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
 			data: () => {
-				current = node.data.num;
-				console.log(node.data.num)
+				console.log("Ran");
 				this.observable.next(node.data.num);
 			},
 		})

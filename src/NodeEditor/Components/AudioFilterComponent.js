@@ -21,21 +21,23 @@ export default class AudioFilterComponent extends Rete.Component {
 			new Rete.Input("frequency", "Frequency", Sockets.NumValue)
 		)
 		.addOutput(
-			new Rete.Output("filter", "Filter", Sockets.AnyValue)
+			new Rete.Output("data", "Filter", Sockets.AnyValue)
 		)
 	}
 
 	worker(node, inputs, outputs){
 		outputs.data = {
 			name: node.id,
-			observable: this.observable
+			observable: this.observable,
+			filter: this.filter,
 		};
 
+		console.log(inputs);
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
 			frequency: (frequencyNumber) => {
-				console.log(frequencyNumber);
+				console.log(inputs.frequency[0].num);
 				this.filter.set({
-					frequency: frequencyNumber
+					frequency: inputs.frequency[0].num || frequencyNumber || 1
 				})
 
 				this.observable.next(this.filter);
