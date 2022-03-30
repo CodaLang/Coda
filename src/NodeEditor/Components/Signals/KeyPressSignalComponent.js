@@ -1,54 +1,52 @@
+
 import Rete from "rete";
 import { filter, fromEvent, map, Subject, tap } from "rxjs";
 import Sockets from "../../sockets";
 import { TimelineInputStream, TimelineOutputStream } from "../../timelineAPI";
 
-export default class MouseClickSignal extends Rete.Component {
+export default class KeyPressSignal extends Rete.Component {
 	constructor(){
-		super("MouseClickSignal");
-		this.mouseClickStreamTable = {};
+		super("KeyPressSignal");
+		this.keyPressStreamTable = {};
 		this.subscriptionTable = {}
 		this.valueTable = {}
 	}
 
 	async builder(node){
-		this.mouseClickStreamTable[node.id] = new Subject();
+		this.keyPressStreamTable[node.id] = new Subject();
 		this.valueTable[node.id] = {
 			numberOfConnections: 0,
 		}
 
-		fromEvent(document, "mousedown").pipe(
+		fromEvent(document, "keydown").pipe(
 			map((event) => {
-				event.stopPropagation();
-				return [
-					event.clientX,
-					event.clientY
-				]
+				// event.stopPropagation();
+				return event.key;
 			}),
-			tap((coordinates) => {
+			tap((key) => {
 				// console.log(this.numberOfConnections);
 				if (this.valueTable[node.id].numberOfConnections > 0){
 					TimelineInputStream.next({
-						action: "MouseClick",
-						data: coordinates
+						action: "KeyPress",
+						data: key
 					});
 				}
-				return coordinates;
+				return key;
 			})
 		).subscribe(coordinates => {
-			this.mouseClickStreamTable[node.id].next(coordinates);
+			this.keyPressStreamTable[node.id].next(coordinates);
 		})
 
 		// For rewinding
 		this.subscriptionTable[node.id] = {
 			timelineSubscription : TimelineOutputStream.subscribe(event => {
-				if (event.action === "MouseClick"){
-					this.mouseClickStreamTable[node.id].next(event.data);
+				if (event.action === "KeyPress"){
+					this.keyPressStreamTable[node.id].next(event.data);
 				}
 			})
 		}
 
-		node.addOutput(new Rete.Output("data", "[x, y]", Sockets.AnyValue));
+		node.addOutput(new Rete.Output("data", "Key", Sockets.AnyValue));
 	}
 
 	worker(node, inputs, outputs){
@@ -56,7 +54,7 @@ export default class MouseClickSignal extends Rete.Component {
 		// console.log(this.mouseClickStreamTable[node.id])
 		outputs.data = {
 			name: node.id,
-			observable: this.mouseClickStreamTable[node.id],
+			observable: this.keyPressStreamTable[node.id],
 		}
 	}
 }

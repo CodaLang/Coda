@@ -21,7 +21,7 @@ export const undoTimeline = () => {
 	redo.push(present);
 
 	TimelineOutputStream.next(present);
-	// console.log("Timeline undone");
+	console.log("Timeline undone");
 };
 
 export const redoTimeline = () => {
@@ -31,7 +31,7 @@ export const redoTimeline = () => {
 	undo.push(present);
 
 	TimelineOutputStream.next(present);
-	// console.log("Timeline redone");
+	console.log("Timeline redone");
 };
 
 export const logTimeline = () => {

@@ -3,9 +3,9 @@ import Sockets from "../sockets";
 import { Subject } from "rxjs";
 import { handleSubscription } from "../../utils";
 
-export default class HeadComponent extends Rete.Component {
+export default class AttackReleaseComponent extends Rete.Component {
 	constructor(){
-		super("Head");
+		super("AttackRelease");
 		this.observableTable = {}
 		this.subscriptionTable = {}
 	}
@@ -16,10 +16,10 @@ export default class HeadComponent extends Rete.Component {
 
 		node
 		.addInput(
-			new Rete.Input("list", "List<A>", Sockets.AnyValue),
+			new Rete.Input("duration", "Duration", Sockets.AnyValue),
 		)
 		.addOutput(
-			new Rete.Output("data", "A", Sockets.AnyValue)
+			new Rete.Output("data", "Release", Sockets.AnyValue)
 		)
 	}
 
@@ -31,10 +31,22 @@ export default class HeadComponent extends Rete.Component {
 			observable: observable,
 		}
 
+		if (inputs.duration && inputs.duration[0]){
+			outputs.data.release = {
+				type: "AttackRelease",
+				duration: inputs.duration[0].num
+			};
+		}
+
+
 		this.subscriptionTable[node.id] = handleSubscription(inputs, this.subscriptionTable[node.id], {
-			list: (list) => {
-				// console.log(list);
-				observable.next(list[0]);
+			duration: (durationValue) => {
+				outputs.data.release = {
+					type: "AttackRelease",
+					duration: durationValue
+				};
+
+				this.observableTable[node.id].next({ type: "AttackRelease", duration: durationValue});
 			},
 		});
 

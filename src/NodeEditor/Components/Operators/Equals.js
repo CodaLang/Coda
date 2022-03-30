@@ -21,10 +21,10 @@ export default class Equals extends Rete.Component {
 
 		node
 		.addInput(
-			new Rete.Input("num1", "Number", Sockets.NumValue, true),
+			new Rete.Input("num1", "Value", Sockets.AnyValue ),
 		)
 		.addInput(
-			new Rete.Input("num2", "Number", Sockets.NumValue, true)
+			new Rete.Input("num2", "Value", Sockets.AnyValue )
 		)
 		.addOutput(
 			new Rete.Output("data", "Boolean", Sockets.BooleanValue)
@@ -39,20 +39,34 @@ export default class Equals extends Rete.Component {
 			observable: observable,
 		}
 
-		const evaluate = () => {
-			this.valueTable[node.id].num1 = inputs.num1 && inputs.num1[0] ? inputs.num1[0].num : 0;
-			this.valueTable[node.id].num2 = inputs.num2 && inputs.num2[0] ? inputs.num2[0].num : 0;
+		const evaluate = (val1, val2) => {
+			// console.log(inputs);
+			if (inputs.num1 && inputs.num1[0] && inputs.num1[0].num){
+				this.valueTable[node.id].num1 = inputs.num1 && inputs.num1[0] ? inputs.num1[0].num : 0;
+				this.valueTable[node.id].num2 = inputs.num2 && inputs.num2[0] ? inputs.num2[0].num : 0;
+			}
+			else if (inputs.num1 && inputs.num1[0] && inputs.num1[0].string){
+				this.valueTable[node.id].num1 = inputs.num1 && inputs.num1[0] ? inputs.num1[0].string : 0;
+				this.valueTable[node.id].num2 = inputs.num2 && inputs.num2[0] ? inputs.num2[0].string : 0;
+			}
+
+			if (val1){
+				this.valueTable[node.id].num1 = val1;
+			}
+			if (val2){
+				this.valueTable[node.id].num2 = val2;
+			}
 
 			observable.next(this.valueTable[node.id].num1 === this.valueTable[node.id].num2)
 		}
 
 		this.subscriptionTable[node.id] = handleSubscription(inputs, this.subscriptionTable[node.id], {
 			num1: (val) => {
-				evaluate();
+				evaluate(val);
 			},
 
 			num2: (val) => {
-				evaluate();
+				evaluate(null, val);
 			}
 		});
 

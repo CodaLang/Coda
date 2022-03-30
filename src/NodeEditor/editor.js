@@ -21,12 +21,17 @@ import * as Tone from "tone";
 import FilterComponent from "./Components/FilterComponent";
 import HeadComponent from "./Components/HeadComponent";
 import TailComponent from "./Components/TailComponent";
+import AttackReleaseComponent from "./Components/AttackReleaseComponent"
+import AttackComponent from "./Components/AttackComponent";
+import DelayComponent from "./Components/DelayComponent";
+import KeyPressSignal from "./Components/Signals/KeyPressSignalComponent";
 
 const options = () => ({
 	container: document.querySelector('.dock'),
 	itemClass: 'item',
 	plugins: [ReactRenderPlugin],
 });
+
 
 const Editor = async () => {
 	const container = document.querySelector("#rete");
@@ -49,11 +54,13 @@ const Editor = async () => {
 		new NumComponent(),
 		new StringComponent(),
 		new MouseClickSignal(),
-		new IntervalSignal(),
-		new WaveSignal(),
+		new KeyPressSignal(),
+		// new IntervalSignal(),
+		// new WaveSignal(),
 		// new PlayNoteComponent(),
 		// new OscillateNoteComponent(),
 		new TapComponent(streams.ConsoleStream),
+		new DelayComponent(),
 		new AddComponent(),
 		new HeadComponent(),
 		new TailComponent(),
@@ -63,6 +70,8 @@ const Editor = async () => {
 		new AudioFilterComponent(),
 		new SynthesizerComponent(),
 		new AudioDestinationComponent(),
+		new AttackReleaseComponent(),
+		new AttackComponent(),
 	];
 
 	components.forEach((c) => {
@@ -87,6 +96,70 @@ const Editor = async () => {
 			e.preventDefault();
 			console.log("Quick saving program");
 			localStorage.setItem("quickSave", JSON.stringify(editor.toJSON()));
+		}
+	})
+
+
+	fromEvent(document, "keydown").subscribe(e => {
+		if (e.ctrlKey && e.key === "1" && e.altKey){
+			console.log("Loading quicksave");
+			const editorJSON = JSON.parse(localStorage.getItem("demo1"));
+			editor.clear();
+			editor.fromJSON(editorJSON);
+			console.log(editorJSON);
+		}
+		else if (e.ctrlKey && e.key === "1"){
+			e.preventDefault();
+			console.log("Quick saving program");
+			localStorage.setItem("demo1", JSON.stringify(editor.toJSON()));
+		}
+	})
+
+
+	fromEvent(document, "keydown").subscribe(e => {
+		if (e.ctrlKey && e.key === "2" && e.altKey){
+			console.log("Loading quicksave");
+			const editorJSON = JSON.parse(localStorage.getItem("demo2"));
+			editor.clear();
+			editor.fromJSON(editorJSON);
+			console.log(editorJSON);
+		}
+		else if (e.ctrlKey && e.key === "2"){
+			e.preventDefault();
+			console.log("Quick saving program");
+			localStorage.setItem("demo2", JSON.stringify(editor.toJSON()));
+		}
+	})
+
+
+	fromEvent(document, "keydown").subscribe(e => {
+		if (e.ctrlKey && e.key === "3" && e.altKey){
+			console.log("Loading quicksave");
+			const editorJSON = JSON.parse(localStorage.getItem("demo3"));
+			editor.clear();
+			editor.fromJSON(editorJSON);
+			console.log(editorJSON);
+		}
+		else if (e.ctrlKey && e.key === "3"){
+			e.preventDefault();
+			console.log("Quick saving program");
+			localStorage.setItem("demo3", JSON.stringify(editor.toJSON()));
+		}
+	})
+
+
+	fromEvent(document, "keydown").subscribe(e => {
+		if (e.ctrlKey && e.key === "4" && e.altKey){
+			console.log("Loading quicksave");
+			const editorJSON = JSON.parse(localStorage.getItem("demo4"));
+			editor.clear();
+			editor.fromJSON(editorJSON);
+			console.log(editorJSON);
+		}
+		else if (e.ctrlKey && e.key === "4"){
+			e.preventDefault();
+			console.log("Quick saving program");
+			localStorage.setItem("demo4", JSON.stringify(editor.toJSON()));
 		}
 	})
 

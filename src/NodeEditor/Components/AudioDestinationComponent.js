@@ -30,7 +30,7 @@ export default class AudioDestinationComponent extends Rete.Component {
 			new Rete.Input("synth", "Synthesizer", Sockets.AnyValue)
 		)
 		.addInput(
-			new Rete.Input("event", "ReleaseEvent?", Sockets.AnyValue)
+			new Rete.Input("release", "Release", Sockets.AnyValue)
 		)
 	}
 
@@ -53,8 +53,23 @@ export default class AudioDestinationComponent extends Rete.Component {
 				this.valueTable[node.id].destinationSynth.set(synthObject.get());
 
 				// console.log(synthObject.noteToPlay);
-				this.valueTable[node.id].destinationSynth.triggerAttack(synthObject.noteToPlay);
+				// this.valueTable[node.id].destinationSynth.triggerAttack(synthObject.noteToPlay);
 				// this.destinationSynth.triggerAttack(synthObject.noteToPlay)
+				let releaseSettings = { };
+				if (inputs.release && inputs.release[0]){
+					releaseSettings = inputs.release[0].release
+				}
+				console.log(releaseSettings);
+
+				if (releaseSettings.type === "Attack"){
+					this.valueTable[node.id].destinationSynth.triggerAttack(synthObject.noteToPlay);
+				}
+				else if (releaseSettings.type === "AttackRelease"){
+					this.valueTable[node.id].destinationSynth.triggerAttackRelease(synthObject.noteToPlay, releaseSettings.duration, releaseSettings.delay);
+				}
+				else{
+					console.warn("Release must be set on AudioDestination");
+				}
 
 				if (synthObject.filterObject){
 					fx.push(synthObject.filterObject);
@@ -62,14 +77,25 @@ export default class AudioDestinationComponent extends Rete.Component {
 				this.valueTable[node.id].destinationSynth.chain(...fx, Tone.Destination);
 			},
 
-			event: (time) => {
+			release: (releaseSetting) => {
 				// console.log(time, typeof time);
 				if (!this.valueTable[node.id].destinationSynth){
                     console.warn("AudioDestination component socket 1 is empty");
                     return;
                 }
 
-				this.valueTable[node.id].destinationSynth.triggerRelease()
+				let releaseSettings = {
+					type: "Attack"
+				}
+				if (inputs.release && inputs.release[0]){
+					releaseSettings = inputs.release[0].release
+				}
+
+				if (releaseSettings.type === "Attack"){
+					this.valueTable[node.id].destinationSynth.triggerRelease();
+				}
+
+				// this.valueTable[node.id].destinationSynth.triggerRelease()
 			}
 		});
 	}

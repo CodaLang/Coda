@@ -30,6 +30,7 @@ export default class TapComponent extends Rete.Component {
 		this.subscriptionTable[node.id] = handleSubscription(inputs, this.subscriptionTable[node.id], {
 			data: (value) => {
 				console.log(value);
+				this.observableTable[node.id].next(value);
 				// this.consoleStream.next(value + "");
 				return value;
 			}
