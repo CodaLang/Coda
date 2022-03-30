@@ -25,7 +25,7 @@ export default class NumComponent extends Rete.Component {
 			num: node.data.num || 0,
 		}
 
-		console.log(inputs);
+		// console.log(inputs);
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
 			data: () => {
 				console.log("Ran");

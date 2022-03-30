@@ -18,6 +18,9 @@ export default class AudioDestinationComponent extends Rete.Component {
 		.addInput(
 			new Rete.Input("synth", "Synth", Sockets.AnyValue)
 		)
+		.addInput(
+			new Rete.Input("event", "ReleaseEvent?", Sockets.AnyValue)
+		)
 	}
 
 	worker(node, inputs, outputs){
@@ -27,12 +30,6 @@ export default class AudioDestinationComponent extends Rete.Component {
 		};
 
 		console.log(inputs);
-		// if (inputs.synth && inputs.synth[0]){
-		// 	const inputSynth = inputs.synth[0].synth;
-		// 	this.destinationSynth = new Tone.Synth();
-		// 	this.destinationSynth.set(inputSynth.get());
-		// }
-
 
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
 			synth: (synthObject) => {
@@ -56,6 +53,17 @@ export default class AudioDestinationComponent extends Rete.Component {
 				}
 				this.destinationSynth.chain(...fx, Tone.Destination);
 			},
+
+			event: (time) => {
+				console.log(time, typeof time);
+				this.destinationSynth.triggerRelease();
+				// if (!isNaN(time)){
+				// 	this.destinationSynth.triggerAttackRelease(Number.parseInt(time));
+				// }
+				// else {
+				// 	this.destinationSynth.triggerRelease();
+				// }
+			}
 		});
 	}
 }

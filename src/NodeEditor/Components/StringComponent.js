@@ -38,6 +38,6 @@ export default class StringComponent extends Rete.Component {
 				this.observable.next(node.data.string);
 			},
 		})
-		console.log(node.id, inputs, this.subscriptions);
+		// console.log(node.id, inputs, this.subscriptions);
 	}
 }

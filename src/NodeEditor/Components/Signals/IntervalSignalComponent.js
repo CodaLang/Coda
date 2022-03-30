@@ -22,7 +22,6 @@ export default class IntervalSignal extends Rete.Component {
 	}
 
 	worker(node, inputs, outputs){
-
 		outputs.data = {
 			name: node.id,
 			observable: this.intervalStream,

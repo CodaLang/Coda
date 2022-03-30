@@ -95,6 +95,7 @@
 // 	return subscriptions;
 // }
 
+let latest;
 
 export const handleSubscription = (inputs, subscriptions, callbacks) => {
 	//If there are inputs to the node, add the subscription if it does not exist, otherwise unsubscribe
@@ -108,22 +109,35 @@ export const handleSubscription = (inputs, subscriptions, callbacks) => {
 	};
 
 	const checkInputsForUnsubscribe = () => {
-		Object.values(subscriptions).forEach(socket => {
-			Object.entries(socket).forEach( ([key, sub]) => {
-				if (!inputs[key]){
-					console.log("Hanging subscription");
-					sub.unsubscribe();
-					console.log(socket, key, subscriptions)	;
+		Object.entries(subscriptions).forEach( ([socketKey, socket]) => {
+			Object.entries(socket).forEach( ([nodeKey, sub]) => {
+
+				if (!inputs[socketKey]){
+					console.log("Hanging socket");
+					Object.values(subscriptions).forEach(subSocket => {
+						Object.values(subSocket).forEach(sub => {
+							sub.unsubscribe();
+						})
+					})
+
+					subscriptions[socketKey] = {};
 				}
-				else if (inputs[key].filter(node => node.name === key).length !== 0){
-					console.log("Hanging subscription");
+				else if (!inputs[socketKey][nodeKey]){
+					console.log("Hanging input node");
+					subscriptions[socketKey][nodeKey].unsubscribe()
+					delete subscriptions[socketKey][nodeKey];
+					// subscriptions[socketKey][nodeKey] = null;
 				}
 			})
 		})
 	}
 
 	checkInputsForUnsubscribe();
-	// console.log(inputs);
+
+	latest = latest ? latest : subscriptions;
+
+	console.log(subscriptions);
+	console.log(subscriptions === latest);
 	// unsubscribeAll();
 
 	if (Object.keys(inputs).length > 0){
@@ -135,7 +149,7 @@ export const handleSubscription = (inputs, subscriptions, callbacks) => {
 				subscriptions[key] = {};
 			}
 
-			callbacks[key]();
+			// callbacks[key]();
 
 			inputSocket.forEach(input => {
 				//If the list of subscriptions does not have a subscription for the input at the specific inputSocket, subscribe

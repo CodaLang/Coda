@@ -76,6 +76,7 @@ export default class SynthesizerComponent extends Rete.Component {
 
 		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
 			note: (noteString) => {
+				console.log("Ran");
 				if ( noteString.length >= 2 && validNotes.includes(noteString.charAt(0).toLowerCase()) && !isNaN(noteString.substring(1))){
 					// console.log(noteString);
 					// this.synth.set({
