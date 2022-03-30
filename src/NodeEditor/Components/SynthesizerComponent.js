@@ -12,6 +12,10 @@ export default class SynthesizerComponent extends Rete.Component {
 		this.subscriptions = {};
 		this.observable = new Subject();
 		this.synth = new Tone.Synth();
+
+		this.observableTable = {}
+		this.subscriptionTable = {}
+		this.valueTable = {};
 		// this.filter = new Tone.Filter();
 
 		this.synth.noteName = "C4";
@@ -20,6 +24,15 @@ export default class SynthesizerComponent extends Rete.Component {
 	}
 
 	async builder(node){
+		this.subscriptionTable[node.id] = {};
+		this.observableTable[node.id] = new Subject();
+		this.valueTable[node.id] = {
+			synth : new Tone.Synth(),
+		}
+
+		this.valueTable[node.id].synth.noteName = "C4";
+		this.valueTable[node.id].synth.filterObject = new Tone.AutoFilter();
+
 		node
 		.addInput(
 			new Rete.Input("note", "Note", Sockets.StringValue)
@@ -39,9 +52,10 @@ export default class SynthesizerComponent extends Rete.Component {
 	}
 
 	worker(node, inputs, outputs){
+		const observable = this.observableTable[node.id];
 		outputs.data = {
 			name: node.id,
-			observable: this.observable
+			observable: observable
 		};
 		// console.log(inputs);
 
@@ -74,53 +88,25 @@ export default class SynthesizerComponent extends Rete.Component {
 			return newSynth;
 		}
 
-		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
+		this.subscriptionTable[node.id] = handleSubscription(inputs, this.subscriptionTable[node.id], {
 			note: (noteString) => {
-				console.log("Ran");
 				if ( noteString.length >= 2 && validNotes.includes(noteString.charAt(0).toLowerCase()) && !isNaN(noteString.substring(1))){
-					// console.log(noteString);
-					// this.synth.set({
-					// 	frequency: noteString,
-					// 	volume: inputs.volume[0].num || 0,
-					// });
-					// this.synth.noteName = noteString;
-
-					// if (inputs.filter[0] && inputs.filter[0].filter){
-					// 	console.log(inputs.filter[0].filter.get());
-					// 	this.synth.filterObject.set(inputs.filter[0].filter.get());
-					// }
-
-					this.observable.next(updateFromInputs());
+					observable.next(updateFromInputs());
 				}
 			},
 
 			volume: (volumeValue) => {
-				// this.synth.set({
-				// 	frequency: inputs.note[0].string || "C4",
-				// 	volume: volumeValue
-				// });
-
-				// if (inputs.filter[0] && inputs.filter[0].filter){
-				// 	this.synth.filterObject.set(inputs.filter[0].filter.get());
-				// }
-
-				this.observable.next(updateFromInputs());
+				observable.next(updateFromInputs());
 			},
 
 			filter: (filterObj) => {
-				// console.log("Ran");
-				// this.synth.filterObject.set( filterObj ? filterObj.get() : {frequency: 0} );
-
-				this.observable.next(updateFromInputs());
+				observable.next(updateFromInputs());
 			},
 
 			event: () => {
-				const synth = updateFromInputs();
-				// synth.triggerAttack("C4");
-				// synth.toDestination();
-				this.observable.next(synth);
+				observable.next(updateFromInputs());
 			}
 		});
-		console.log(this.subscriptions);
+		// console.log(this.subscriptions);
 	}
 }

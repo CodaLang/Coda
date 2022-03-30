@@ -7,18 +7,20 @@ import NumComponent from "./Components/NumComponent";
 import MouseClickSignal from "./Components/Signals/MouseClickSignalComponent";
 import TapComponent from "./Components/TapComponent";
 import AddComponent from "./Components/AddComponent";
-import PlayNoteComponent from "./Components/PlayNoteComponent";
 import IntervalSignal from "./Components/Signals/IntervalSignalComponent";
 import WaveSignal from "./Components/Signals/WaveSignalComponent";
-import OscillateNoteComponent from "./Components/OscillateNoteComponent";
 import { streams } from "../App";
 import StringComponent from "./Components/StringComponent";
 import GreaterThan from "./Components/Operators/GreaterThan";
+import Equals from "./Components/Operators/Equals"
 import { filter, fromEvent } from "rxjs";
 import SynthesizerComponent from "./Components/SynthesizerComponent";
 import AudioDestinationComponent from "./Components/AudioDestinationComponent";
 import AudioFilterComponent from "./Components/AudioFilterComponent";
 import * as Tone from "tone";
+import FilterComponent from "./Components/FilterComponent";
+import HeadComponent from "./Components/HeadComponent";
+import TailComponent from "./Components/TailComponent";
 
 const options = () => ({
 	container: document.querySelector('.dock'),
@@ -53,6 +55,10 @@ const Editor = async () => {
 		// new OscillateNoteComponent(),
 		new TapComponent(streams.ConsoleStream),
 		new AddComponent(),
+		new HeadComponent(),
+		new TailComponent(),
+		new FilterComponent(),
+		new Equals(),
 		new GreaterThan(),
 		new AudioFilterComponent(),
 		new SynthesizerComponent(),

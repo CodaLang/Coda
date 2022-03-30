@@ -8,12 +8,14 @@ import StringControl from "../Controls/StringControl";
 export default class StringComponent extends Rete.Component {
 	constructor(){
 		super("String");
-		this.subscriptions = {};
-		this.observable = new Subject();
-		// this.controlStream = new Subject();
+		this.subscriptionTable = {};
+		this.observableTable = {};
 	}
 
 	async builder(node){
+		this.observableTable[node.id] = new Subject();
+		this.subscriptionTable[node.id] = {};
+
 		const input = new Rete.Input("data", "Event", Sockets.AnyValue);
 		const out = new Rete.Output("data", "String", Sockets.StringValue);
 
@@ -21,23 +23,18 @@ export default class StringComponent extends Rete.Component {
 	}
 
 	worker(node, inputs, outputs){
-		let current = "";
-
+		const observable = this.observableTable[node.id];
 		outputs.data = {
 			name: node.id,
-			observable: this.observable,
+			observable: observable,
 			string: node.data.string,
 		}
 
-		// this.subscriptions.nodeName = node.id;
 
-		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
+		this.subscriptionTable[node.id] = handleSubscription(inputs, this.subscriptionTable[node.id], {
 			data: () => {
-				// console.log(node.id);
-				current = node.data.string;
-				this.observable.next(node.data.string);
+				observable.next(node.data.string);
 			},
 		})
-		// console.log(node.id, inputs, this.subscriptions);
 	}
 }

@@ -4,14 +4,19 @@ import { Subject } from "rxjs";
 import { handleSubscription } from "../../utils";
 import NumControl from "../Controls/NumControl";
 
+// let last = null;
+
 export default class NumComponent extends Rete.Component {
 	constructor(){
 		super("Number");
-		this.subscriptions = {};
-		this.observable = new Subject();
+		this.subscriptionTable = {};
+		this.observableTable = {};
 	}
 
 	async builder(node){
+		this.observableTable[node.id] = new Subject();
+		this.subscriptionTable[node.id] = {};
+
 		const input = new Rete.Input("data", "Event", Sockets.AnyValue);
 		const out = new Rete.Output("data", "Num", Sockets.NumValue);
 
@@ -19,17 +24,19 @@ export default class NumComponent extends Rete.Component {
 	}
 
 	worker(node, inputs, outputs){
+		const observable = this.observableTable[node.id];
+
 		outputs.data = {
 			name: node.id,
-			observable: this.observable,
+			observable: observable,
 			num: node.data.num || 0,
 		}
 
 		// console.log(inputs);
-		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
+		this.subscriptionTable[node.id] = handleSubscription(inputs, this.subscriptionTable[node.id], {
 			data: () => {
 				console.log("Ran");
-				this.observable.next(node.data.num);
+				observable.next(node.data.num);
 			},
 		})
 	}

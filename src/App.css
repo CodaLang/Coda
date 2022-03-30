@@ -36,11 +36,13 @@ body {
   position: absolute;
   top: 92%;
   /* left: 10px; */
-  width: 100%;
+  width: 200%;
   transform: scale(.6);
   transform-origin: 0 0;
   transition: top ease .5s;
   opacity: .7;
+  overflow-y: hidden;
+  overflow-x: auto;
   /* background: linear-gradient(0deg, rgb(239, 242, 247) 90%,transparent); */
 }
 

@@ -8,15 +8,26 @@ import Sockets from "../sockets";
 export default class AudioDestinationComponent extends Rete.Component {
 	constructor(){
 		super("AudioDestination");
-		this.subscriptions = {};
-		this.observable = new Subject();
-		this.destinationSynth = new Tone.Synth();
+		// this.subscriptions = {};
+		// this.observable = new Subject();
+		// this.destinationSynth = new Tone.Synth();
+
+		this.observableTable = {}
+		this.subscriptionTable = {}
+		this.valueTable = {};
 	}
 
 	async builder(node){
+
+		this.subscriptionTable[node.id] = {};
+		this.observableTable[node.id] = new Subject();
+		this.valueTable[node.id] = {
+			destinationSynth : new Tone.Synth()
+		}
+
 		node
 		.addInput(
-			new Rete.Input("synth", "Synth", Sockets.AnyValue)
+			new Rete.Input("synth", "Synthesizer", Sockets.AnyValue)
 		)
 		.addInput(
 			new Rete.Input("event", "ReleaseEvent?", Sockets.AnyValue)
@@ -24,45 +35,41 @@ export default class AudioDestinationComponent extends Rete.Component {
 	}
 
 	worker(node, inputs, outputs){
+		const observable = this.observableTable[node.id];
 		outputs.data = {
 			name: node.id,
-			observable: this.observable
+			observable: observable
 		};
 
-		console.log(inputs);
+		// console.log(inputs);
 
-		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
+		this.subscriptionTable[node.id] = handleSubscription(inputs, this.subscriptionTable[node.id], {
 			synth: (synthObject) => {
 				const fx = [];
-				// console.log(synthObject);
-				console.log(synthObject);
-
-				// this.destinationSynth.triggerRelease();
-				this.destinationSynth.dispose();
+				this.valueTable[node.id].destinationSynth.dispose();
 				// synthObject.triggerAttack("C4");
 				// synthObject.toDestination();
+				this.valueTable[node.id].destinationSynth = new Tone.Synth();
+				this.valueTable[node.id].destinationSynth.set(synthObject.get());
 
-				this.destinationSynth = new Tone.Synth();
-				this.destinationSynth.set(synthObject.get());
-
-				console.log(synthObject.noteToPlay);
-				this.destinationSynth.triggerAttack(synthObject.noteToPlay)
+				// console.log(synthObject.noteToPlay);
+				this.valueTable[node.id].destinationSynth.triggerAttack(synthObject.noteToPlay);
+				// this.destinationSynth.triggerAttack(synthObject.noteToPlay)
 
 				if (synthObject.filterObject){
 					fx.push(synthObject.filterObject);
 				}
-				this.destinationSynth.chain(...fx, Tone.Destination);
+				this.valueTable[node.id].destinationSynth.chain(...fx, Tone.Destination);
 			},
 
 			event: (time) => {
-				console.log(time, typeof time);
-				this.destinationSynth.triggerRelease();
-				// if (!isNaN(time)){
-				// 	this.destinationSynth.triggerAttackRelease(Number.parseInt(time));
-				// }
-				// else {
-				// 	this.destinationSynth.triggerRelease();
-				// }
+				// console.log(time, typeof time);
+				if (!this.valueTable[node.id].destinationSynth){
+                    console.warn("AudioDestination component socket 1 is empty");
+                    return;
+                }
+
+				this.valueTable[node.id].destinationSynth.triggerRelease()
 			}
 		});
 	}

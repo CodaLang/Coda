@@ -3,9 +3,9 @@ import Sockets from "../../sockets";
 import { Subject } from "rxjs";
 import { handleSubscription } from "../../../utils";
 
-export default class GreaterThan extends Rete.Component {
+export default class Equals extends Rete.Component {
 	constructor(){
-		super(">");
+		super("==");
 		this.observableTable = {}
 		this.subscriptionTable = {}
 		this.valueTable = {};
@@ -43,7 +43,7 @@ export default class GreaterThan extends Rete.Component {
 			this.valueTable[node.id].num1 = inputs.num1 && inputs.num1[0] ? inputs.num1[0].num : 0;
 			this.valueTable[node.id].num2 = inputs.num2 && inputs.num2[0] ? inputs.num2[0].num : 0;
 
-			observable.next(this.valueTable[node.id].num1 > this.valueTable[node.id].num2)
+			observable.next(this.valueTable[node.id].num1 === this.valueTable[node.id].num2)
 		}
 
 		this.subscriptionTable[node.id] = handleSubscription(inputs, this.subscriptionTable[node.id], {

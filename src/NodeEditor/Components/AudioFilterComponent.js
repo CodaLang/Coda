@@ -10,12 +10,18 @@ import { AutoFilter, Filter } from "tone";
 export default class AudioFilterComponent extends Rete.Component {
 	constructor(){
 		super("AudioFilter");
-		this.subscriptions = {};
-		this.observable = new Subject();
-		this.filter = new AutoFilter();
+		this.observableTable = {}
+		this.subscriptionTable = {}
+		this.valueTable = {};
 	}
 
 	async builder(node){
+		this.subscriptionTable[node.id] = {};
+		this.observableTable[node.id] = new Subject();
+		this.valueTable[node.id] = {
+			filter : new AutoFilter(),
+		}
+
 		node
 		.addInput(
 			new Rete.Input("frequency", "Frequency", Sockets.NumValue)
@@ -26,21 +32,20 @@ export default class AudioFilterComponent extends Rete.Component {
 	}
 
 	worker(node, inputs, outputs){
+		const observable = this.observableTable[node.id];
 		outputs.data = {
 			name: node.id,
-			observable: this.observable,
-			filter: this.filter,
+			observable: observable,
+			filter: this.valueTable[node.id].filter,
 		};
 
-		console.log(inputs);
-		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
+		this.subscriptionTable[node.id] = handleSubscription(inputs, this.subscriptionTable[node.id], {
 			frequency: (frequencyNumber) => {
-				console.log(inputs.frequency[0].num);
-				this.filter.set({
+				this.valueTable[node.id].filter.set({
 					frequency: inputs.frequency[0].num || frequencyNumber || 1
 				})
 
-				this.observable.next(this.filter);
+				observable.next(this.valueTable[node.id].filter);
 			},
 		});
 	}

@@ -6,20 +6,28 @@ import { TimelineInputStream, TimelineOutputStream } from "../../timelineAPI";
 export default class MouseClickSignal extends Rete.Component {
 	constructor(){
 		super("MouseClickSignal");
-		this.numberOfConnections = 0;
+		this.mouseClickStreamTable = {};
+		this.subscriptionTable = {}
+		this.valueTable = {}
+	}
 
-		this.mouseClickStream = new Subject();
+	async builder(node){
+		this.mouseClickStreamTable[node.id] = new Subject();
+		this.valueTable[node.id] = {
+			numberOfConnections: 0,
+		}
+
 		fromEvent(document, "mousedown").pipe(
 			map((event) => {
 				event.stopPropagation();
-				return {
-					x: event.clientX,
-					y: event.clientY
-				}
+				return [
+					event.clientX,
+					event.clientY
+				]
 			}),
 			tap((coordinates) => {
 				// console.log(this.numberOfConnections);
-				if (this.numberOfConnections > 0){
+				if (this.valueTable[node.id].numberOfConnections > 0){
 					TimelineInputStream.next({
 						action: "MouseClick",
 						data: coordinates
@@ -28,27 +36,27 @@ export default class MouseClickSignal extends Rete.Component {
 				return coordinates;
 			})
 		).subscribe(coordinates => {
-			this.mouseClickStream.next(coordinates);
+			this.mouseClickStreamTable[node.id].next(coordinates);
 		})
 
 		// For rewinding
-		this.timelineSubscription = TimelineOutputStream.subscribe(event => {
-			if (event.action === "MouseClick"){
-				this.mouseClickStream.next(event.data);
-			}
-		})
-	}
+		this.subscriptionTable[node.id] = {
+			timelineSubscription : TimelineOutputStream.subscribe(event => {
+				if (event.action === "MouseClick"){
+					this.mouseClickStreamTable[node.id].next(event.data);
+				}
+			})
+		}
 
-	async builder(node){
 		node.addOutput(new Rete.Output("data", "[x, y]", Sockets.AnyValue));
 	}
 
 	worker(node, inputs, outputs){
-		this.numberOfConnections = node.outputs.data.connections.length;
-		// console.log(node.outputs.data.connections.length);
+		this.valueTable[node.id].numberOfConnections = node.outputs.data.connections.length;
+		console.log(this.mouseClickStreamTable[node.id])
 		outputs.data = {
 			name: node.id,
-			observable: this.mouseClickStream,
+			observable: this.mouseClickStreamTable[node.id],
 		}
 	}
 }

@@ -1,18 +1,24 @@
 import Rete from "rete";
 import Sockets from "../sockets";
-import { Subject, combineLatestWith, map, tap, combineLatest } from "rxjs";
+import { Subject } from "rxjs";
 import { handleSubscription } from "../../utils";
 
 export default class AddComponent extends Rete.Component {
 	constructor(){
 		super("Add");
-		this.subscriptions = {};
-		this.observable = new Subject();
-		this.num1 = null;
-		this.num2 = null;
+		this.observableTable = {}
+		this.subscriptionTable = {}
+		this.valueTable = {};
 	}
 
 	async builder(node){
+		this.subscriptionTable[node.id] = {};
+		this.observableTable[node.id] = new Subject();
+		this.valueTable[node.id] = {
+			num1: 0,
+			num2: 0,
+		}
+
 		node
 		.addInput(
 			new Rete.Input("num", "Number", Sockets.NumValue),
@@ -26,25 +32,29 @@ export default class AddComponent extends Rete.Component {
 	}
 
 	async worker(node, inputs, outputs){
+		const observable = this.observableTable[node.id];
 		outputs.data = {
 			name: node.id,
-			observable: this.observable
+			observable: observable
 		}
 
-		this.subscriptions = handleSubscription(inputs, this.subscriptions, {
+		this.subscriptionTable[node.id] = handleSubscription(inputs, this.subscriptionTable[node.id], {
 			num: (value) => {
 				if (!Number.isInteger(value)){
 					console.warn("Must provide number value for Add component socket 1");
 					return;
 				}
 
-				if (!this.num2){
-					console.warn("Cannot add number value with empty socket");
+				const num2 = inputs.num2 ? inputs.num2[0].num : null
+
+				if (!num2){
+					console.warn("Cannot add number value with second empty socket");
 					return;
 				}
 
-				this.num1 = value
-				this.observable.next(this.num1 + this.num2);
+				this.valueTable[node.id].num1 = value
+
+				observable.next(value + num2);
 			},
 
 			num2: (value) => {
@@ -53,52 +63,16 @@ export default class AddComponent extends Rete.Component {
 					return;
 				}
 
-				if (!this.num1){
-					console.warn("Cannot add number value with empty socket");
+				const num = inputs.num ? inputs.num[0].num : null
+
+				if (!num){
+					console.warn("Cannot add number value with first empty socket");
 					return;
 				}
 
-				this.num2 = value	
-				this.observable.next(this.num1 + this.num2);
+				this.valueTable[node.id].num2 = value	
+				observable.next(num + value);
 			}
 		})
-
-		// if (this.subscriptions.length !== 0){
-		// 	Object.values(this.subscriptions).forEach(sub => {
-		// 		sub.unsubscribe();
-		// 	})
-		// 	this.subscriptions = {};
-		// }
-
-		// if(inputs.num.length === 1){
-		// 	this.subscriptions[inputs.num[0].name] = inputs.num[0].observable.subscribe( (num) => {
-		// 		this.observable.next(num);
-		// 	});
-		// }
-		// else if (inputs.num.length > 1) {
-		// 	const observablesToSub = [];
-
-		// 	inputs.num.forEach(input => {
-		// 		observablesToSub.push(input.observable);
-		// 	})
-
-		// 	const sub = combineLatest(
-		// 		inputs.num.map(input => input.observable)
-		// 	).pipe(
-		// 		tap((...vals) => {
-		// 			console.log(vals);
-		// 			return vals;
-		// 		}),
-		// 		map((...vals) => {
-		// 			return vals.reduce((acc, val) => Number(acc) + Number(val), 0);
-		// 		})
-		// 	).subscribe(x => {
-		// 		this.observable.next(x);
-		// 	})
-
-		// 	for (let i = 0; i < inputs.num.length; i++){
-		// 		this.subscriptions[inputs.num[i].name] = sub;
-		// 	}
-		// }
 	}
 }
