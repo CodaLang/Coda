@@ -59,7 +59,7 @@ export default class AudioDestinationComponent extends Rete.Component {
 				if (inputs.release && inputs.release[0]){
 					releaseSettings = inputs.release[0].release
 				}
-				console.log(releaseSettings);
+				// console.log(releaseSettings);
 
 				if (releaseSettings.type === "Attack"){
 					this.valueTable[node.id].destinationSynth.triggerAttack(synthObject.noteToPlay);

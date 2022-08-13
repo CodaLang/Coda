@@ -1,70 +1,19 @@
-# Getting Started with Create React App
+# The Coda Visual Programming Language
+`Coda` is a visual programming language designed for interactive audio development.
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+It utilizes concepts from Functional Reactive Programming to enable features such as hot-reloading and runtime rewinding to provide a responsive, snappy, and creative environment for developers.
 
-## Available Scripts
+## Getting Started
+The simplest way to start composing with Coda is by cloning this repository and installing dependencies with `npm install`. From there, the project can be run with `npm start`. Open [http://localhost:3000](http://localhost:3000) to view the editor in your browser.
+___
 
-In the project directory, you can run:
+## The Language
+Coda works as a visual programming language, which means that you can drag and drop nodes from the bottom menu onto the editor interface. Each node either represents a function or a signal. A signal, such as `MouseClickSignal`, models a *time-varying value*. In the case of `MouseClickSignal`, this signal represents the coordinates of the mouse whenever the mouse was clicked. Connecting this signal to a function nodes will pipe its value through the function, returning the transformed value continuously.
 
-### `npm start`
+These function nodes compose further together to form longer chains which will make up your program. Along the way, you can include various functions that will build up audio elements, such as the `Synthesizer` function. These elements allow you to declaratively design the audio and interaction model, such as audio properties or triggers. Finally, the actual IO action of playing audio is done by connecting your audio elements to the ending signal `AudioDestination`.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+## Hot Reloading and Rewinding
+Coda also allows for quick iterations and debugging by providing reloading and rewinding functionalities. Reloading occurs seamlessly throughout development, where changing variable values in the editor automatically update runtime behavior without needing to restart. Inserting and removing functions also update the runtime once connections are made.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+Whenever a signal's value is changed, such as through a mouse click or keyboard press, it's value is recorded to a *timeline*. Pressing the left and right arrow key will allow you to move backwards or forwards through this timeline. At each timeframe, the value is replayed their recorded signal. This allows you to return to older runtime states, but with a potentially new program model.
 
-### `npm test`
-
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
-
-### `npm run build`
-
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
